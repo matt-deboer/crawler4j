@@ -256,8 +256,12 @@ public class CrawlController extends Configurable {
                 }
                 if (!someoneIsWorking) {
                   // Make sure again that none of the threads are alive.
-                  logger.info("It looks like no thread is working, waiting for 10 seconds to make sure...");
-                  sleep(10);
+                  if (config.getShutdownDelay() > 0) {
+                    logger.info(
+                        String.format("It looks like no thread is working, waiting for %d seconds to make sure...", 
+                                        config.getShutdownDelay()));
+                    sleep(config.getShutdownDelay());
+                  }
 
                   someoneIsWorking = false;
                   for (int i = 0; i < threads.size(); i++) {
@@ -272,10 +276,12 @@ public class CrawlController extends Configurable {
                       if (queueLength > 0) {
                         continue;
                       }
-                      logger.info(
-                          "No thread is working and no more URLs are in queue waiting for another 10 seconds to make " +
-                          "sure...");
-                      sleep(10);
+                      if (config.getShutdownDelay() > 0) {
+                          logger.info(
+                              String.format("No thread is working and no more URLs are in queue waiting for another %d seconds to make " +
+                              "sure...", config.getShutdownDelay()));
+                          sleep(config.getShutdownDelay());
+                      }
                       queueLength = frontier.getQueueLength();
                       if (queueLength > 0) {
                         continue;
@@ -290,8 +296,12 @@ public class CrawlController extends Configurable {
                       crawlersLocalData.add(crawler.getMyLocalData());
                     }
 
-                    logger.info("Waiting for 10 seconds before final clean up...");
-                    sleep(10);
+                    if (config.getShutdownDelay() > 0) {
+                        logger.info(
+                            String.format("Waiting for %d seconds before final clean up...", 
+                                            config.getShutdownDelay()));
+                        sleep(config.getShutdownDelay());
+                    }
 
                     frontier.close();
                     docIdServer.close();
