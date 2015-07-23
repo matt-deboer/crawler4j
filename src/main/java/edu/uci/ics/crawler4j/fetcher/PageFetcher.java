@@ -29,6 +29,7 @@ import java.util.List;
 import javax.net.ssl.SSLContext;
 
 import edu.uci.ics.crawler4j.crawler.authentication.NtAuthInfo;
+
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -47,6 +48,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -114,6 +116,7 @@ public class PageFetcher extends Configurable {
     connectionManager = new PoolingHttpClientConnectionManager(connRegistry);
     connectionManager.setMaxTotal(config.getMaxTotalConnections());
     connectionManager.setDefaultMaxPerRoute(config.getMaxConnectionsPerHost());
+    
 
     HttpClientBuilder clientBuilder = HttpClientBuilder.create();
     clientBuilder.setDefaultRequestConfig(requestConfig);

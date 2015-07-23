@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,8 @@ public class PageFetchResult {
   protected Header[] responseHeaders = null;
   protected String fetchedUrl = null;
   protected String movedToUrl = null;
-
+  protected CloseableHttpResponse response;
+  
   public int getStatusCode() {
     return statusCode;
   }
@@ -52,6 +54,10 @@ public class PageFetchResult {
     return entity;
   }
 
+  public void setResponse(CloseableHttpResponse response) {
+	  this.response = response;
+  }
+  
   public void setEntity(HttpEntity entity) {
     this.entity = entity;
   }
@@ -97,6 +103,16 @@ public class PageFetchResult {
     }
   }
 
+  public void close() {
+	  if (response != null) {
+		  try {
+			response.close();
+		} catch (IOException e) {
+			logger.warn("Exception while closing response for: {}", fetchedUrl, e);
+		}
+	  }
+  }
+  
   public String getMovedToUrl() {
     return movedToUrl;
   }
